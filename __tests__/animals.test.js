@@ -107,6 +107,24 @@ describe('animal routes', () => {
         });
       });
   });
+
+  it('should update an animal by id', () => {
+    return request(app)
+      .patch(`/api/v1/animals/${animal._id}`)
+      .send({ age: 14, display: 'Piggy' })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          barnId: barn._id.toString(),
+          species: 'pig',
+          age: 14,
+          maxAge: 15,
+          size: 2,
+          display: 'Piggy',
+          __v: 0
+        });
+      });
+  });
 });
 
 
