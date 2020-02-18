@@ -125,6 +125,23 @@ describe('animal routes', () => {
         });
       });
   });
+
+  it('should delete an animal by id', () => {
+    return request(app)
+      .delete(`/api/v1/animals/${animal._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          age: 11,
+          barnId: barn._id.toString(),
+          display: 'Oinker',
+          maxAge: 15,
+          size: 2,
+          species: 'pig',
+          __v: 0
+        });
+      });
+  });
 });
 
 
