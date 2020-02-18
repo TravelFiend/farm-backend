@@ -13,10 +13,19 @@ describe('animal routes', () => {
   beforeEach(() => mongoose.connection.dropDatabase());
   
   let barn;
+  let animal;
   beforeEach(async() => {
     barn = await Barn.create({
       barnType: 'chickens',
       maxSize: 50
+    });
+    animal = await Animal.create({
+      barnId: barn._id,
+      species: 'pig',
+      age: 11,
+      maxAge: 15,
+      size: 2,
+      display: 'Oinker'
     });
   });
 
@@ -45,7 +54,58 @@ describe('animal routes', () => {
           __v: 0
         });
       });
+  });
 
+  it('should get all animals', async() => {
+    await Animal.create({
+      barnId: barn._id,
+      species: 'chicken',
+      age: 3,
+      maxAge: 5,
+      size: 1,
+      display: 'Cluck Cluck'
+    }, { 
+      barnId: barn._id,
+      species: 'chicken',
+      age: 2,
+      maxAge: 5,
+      size: 3,
+      display: 'Chickity China'
+    });
+
+    return request(app)
+      .get('/api/v1/animals')
+      .then(animals => {
+        animals.body.forEach(animal => {
+          expect(animal).toEqual({
+            _id: expect.any(String),
+            barnId: barn._id.toString(),
+            species: expect.any(String),
+            age: expect.any(Number),
+            maxAge: expect.any(Number),
+            size: expect.any(Number),
+            display: expect.any(String),
+            __v: 0
+          });
+        });
+      });
+  });
+
+  it('should get an animal by id', () => {
+    return request(app)
+      .get(`/api/v1/animals/${animal._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          barnId: barn._id.toString(),
+          species: 'pig',
+          age: 11,
+          maxAge: 15,
+          size: 2,
+          display: 'Oinker',
+          __v: 0
+        });
+      });
   });
 });
 
