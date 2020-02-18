@@ -5,7 +5,7 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Barn = require('../lib/models/Barn');
-const Animal = require('../lib/models/Animals');
+const Animal = require('../lib/models/Animal');
 
 describe('app routes', () => {
   beforeAll(() => {
